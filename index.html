@@ -25,8 +25,7 @@
 			document.getElementById('telaC').width  = sX * 2;
 			document.getElementById('telaC').height = sY * 2;
 			
-			//frame();
-			setInterval(frame, timer);
+			frame();
 		};
 		
 		function geracao() {
@@ -85,7 +84,11 @@
 		function frame() {
 			geracao();
 			desenha();
-			//animationFrame (frame); 
+			
+			setTimeout(reqFrame, timer);
+		}
+		function reqFrame() {
+			animationFrame (frame);
 		}
 		
 		window.animationFrame = (function(){
