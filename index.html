@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<title>Life's</title>
+		<style type="text/css">
+			#tela { font-family: "Courier New", Courier, monospace }
+		</style>
+		<script type="text/javascript">
+		var sX = 40, sY = 140, timer = 100;
+		var cells = new Array(sX+2);
+		
+		function init() {
+			var x, y;
+			// init
+			for(x=0; x<sX+2; x++) {
+				cells[x] = new Array(sY+2);
+			}
+			// initial draw
+			for(x=0; x<sX+2; x++) {
+				for(y=0; y<sY+2; y++) {
+					cells[x][y] = (x==20||y==70) ? 1 : 0;
+				}
+			}
+			
+			setInterval(frame, timer);
+		};
+		
+		function geracao() {
+			var x, y;
+			var alive, neighbours;
+			var newCells = new Array(sX + 2);
+			
+			newCells[0]  = new Array(sY+2);
+			newCells[sX] = new Array(sY+2);
+			
+			for(x=1; x<sX; x++) {
+				newCells[x] = new Array(sY+2);
+				for(y=1; y<sY; y++) {
+					neighbours = 0;
+					if(cells[x-1][y-1]) neighbours++;
+					if(cells[x  ][y-1]) neighbours++;
+					if(cells[x+1][y-1]) neighbours++;
+					if(cells[x-1][y  ]) neighbours++;
+					if(cells[x+1][y  ]) neighbours++;
+					if(cells[x-1][y+1]) neighbours++;
+					if(cells[x  ][y+1]) neighbours++;
+					if(cells[x+1][y+1]) neighbours++;
+					
+					alive = cells[x][y];
+					if(alive) {
+						if(neighbours < 2 || neighbours > 3) alive = 0; // 0 ou 1 = Solitude, 2 ou 3 = Ideal, 4+ = Craude
+					} else {
+						if(neighbours == 3) alive = 2; // 3 = birth
+					}
+					newCells[x][y] = alive;
+				}
+			}
+			cells = newCells;
+		}
+		
+		function desenha() {
+			var x, y;
+			var txt = '';
+			
+			for(x=1; x<sX; x++) {
+				for(y=1; y<sY; y++) {
+					txt += (cells[x][y] == 2) ? '0' : (cells[x][y] ? '*' : '.');
+				}
+				txt += "<br>\n";
+			}
+			document.getElementById('tela').innerHTML = txt;
+		}
+		
+		function frame() {
+			geracao();
+			desenha();
+			//animationFrame (frame); 
+		}
+		
+		window.animationFrame = (function(){
+		    return  window.requestAnimationFrame       || 
+		        window.webkitRequestAnimationFrame || 
+		        window.mozRequestAnimationFrame    || 
+		        window.oRequestAnimationFrame      || 
+		        window.msRequestAnimationFrame     || 
+		        function(/* function */ callback, /* DOMElement */ element){
+		            window.setTimeout(callback, 1000 / 60);
+		        };
+		})();
+		</script>
+	</head>
+	<body onload="init()">
+		<div id='tela'></div>
+	</body>
+</html>
