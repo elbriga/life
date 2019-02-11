@@ -3,6 +3,7 @@
 		<title>Life's</title>
 		<style type="text/css">
 			#tela { font-family: "Courier New", Courier, monospace }
+			#telaC { position: absolute; left: 300; top: 100;}
 		</style>
 		<script type="text/javascript">
 		var sX = 40, sY = 140, timer = 50;
@@ -17,10 +18,12 @@
 			// initial draw
 			for(x=0; x<sX+2; x++) {
 				for(y=0; y<sY+2; y++) {
-					//cells[x][y] = (x==20||y==70) ? 1 : 0;
 					cells[x][y] = (x==20||y==70||(x==10&&y==10)||(x==11&&y==11)||(x==11&&y==10)||(x==12&&y==10)) ? 1 : 0;
 				}
 			}
+			
+			document.getElementById('telaC').width  = sX * 2;
+			document.getElementById('telaC').height = sY * 2;
 			
 			//frame();
 			setInterval(frame, timer);
@@ -64,9 +67,15 @@
 			var x, y;
 			var txt = '';
 			
+			var canvas = document.getElementById("telaC");
+			var ctx    = canvas.getContext("2d");
+			
 			for(x=1; x<sX; x++) {
 				for(y=1; y<sY; y++) {
 					txt += (cells[x][y] == 2) ? '0' : (cells[x][y] ? '*' : '.');
+					
+					ctx.fillStyle = (cells[x][y] == 2) ? '#FF00FF' : (cells[x][y] ? '#FF0000' : '#000000');
+					ctx.fillRect(x*2, y*2, x*2+1, y*2+1);
 				}
 				txt += "<br>\n";
 			}
@@ -93,5 +102,6 @@
 	</head>
 	<body onload="init()">
 		<div id='tela'></div>
+		<canvas id="telaC"></canvas>
 	</body>
 </html>
